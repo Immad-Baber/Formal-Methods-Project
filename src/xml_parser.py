@@ -138,6 +138,8 @@ class FeatureModelParser:
         if group_elem is not None:
             gtype = group_elem.get("type", "").lower()
             feat.group_type = gtype
+            if gtype not in ["xor", "or"]:
+                raise ValueError(f"Invalid group type '{gtype}' in feature '{name}'")
             for gchild in group_elem.findall("feature"):
                 gname = gchild.get("name")
                 # grouped features: mandatory=False individually; group constraint applied separately
