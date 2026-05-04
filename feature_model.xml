@@ -1,0 +1,36 @@
+<featureModel>
+    <feature name="Application">
+        <feature name="Catalog" mandatory="true">
+            <feature name="Filtered" mandatory="true">
+                <group type="xor">
+                    <feature name="ByDiscount"/>
+                    <feature name="ByWeather"/>
+                    <feature name="ByLocation"/>
+                </group>
+            </feature>
+        </feature>
+        <feature name="Notification">
+            <group type="xor">
+                <feature name="SMS"/>
+                <feature name="Call"/>
+            </group>
+        </feature>
+        <feature name="Location" mandatory="false">
+            <group type="or">
+                <feature name="WiFi"/>
+                <feature name="GPS"/>
+            </group>
+        </feature>
+        <feature name="Payment" mandatory="true">
+            <group type="or">
+                <feature name="CreditCard"/>
+                <feature name="Discount"/>
+            </group>
+        </feature>
+    </feature>
+    <constraints>
+        <constraint>
+            <englishStatement>The Location feature is required to filter the catalog by location.</englishStatement>
+        </constraint>
+    </constraints>
+</featureModel>
