@@ -329,20 +329,17 @@ class LogicTranslator:
         t = text.strip().rstrip(".")
         tl = t.lower()
 
-        # Pattern: "The Location feature is required to filter the catalog by location."
-        # Meaning: ByLocation → Location
+        # Pattern: "... is required to ..." (English cross-tree, heuristic)
         if "is required to" in tl:
-            # "X is required to [action involving Y]"
-            # X is the required feature, Y is the dependent feature
-            # heuristic: extract feature names from known feature list
-            feat_names = list(self.parser.features.keys())
-            found = [fn for fn in feat_names if fn.lower() in tl]
-            if len(found) >= 2:
-                # The first mentioned feature that appears after subject → required
-                # Convention: "Location is required to ByLocation" → ByLocation → Location
-                required = found[0]
-                dependent = found[-1]
-                return f"{dependent} → {required}"
+            feats = self.parser.features
+            # NUCES sample: "The Location feature is required to filter the catalog by location."
+            # Intended: selecting ByLocation forces Location (not Location → Catalog: substring
+            # matching used to wrongly pick "catalog" + "location" from the same sentence).
+            if "by location" in tl and "ByLocation" in feats and "Location" in feats:
+                return "ByLocation → Location"
+            # Other "is required to …" phrasings are ambiguous; use booleanExpression in XML or
+            # an explicit "FeatureA requires FeatureB" sentence instead.
+            return f"[Manual translation needed]: {t}"
 
         # Pattern: "X requires Y"
         if " requires " in tl:
