@@ -1,2 +1,0 @@
-# Formal Methods project — SAT layer (Member 2)
-python-sat>=0.1.8.dev0
